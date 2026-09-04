@@ -1,0 +1,57 @@
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { describe, expect, it } from 'vitest'
+import { buildingConfig, cityConfig } from '@/config'
+import { runPipeline } from '@/data/pipeline'
+import { buildLayout } from '@/building/layoutSolver'
+import { buildCityBuildings, buildCityLayout, buildHouses } from './index'
+
+/**
+ * How big the rest of the city is, against the tower it stands around.
+ *
+ * Two failures are possible and this file has to catch both. Beside a
+ * 900-unit hero the city read as a model village — a median building 46 units
+ * tall and a house 6 — which is what these lower bounds are for. Push the
+ * other way and the landmark stops being one, which is what the upper bounds
+ * are for. The tower's own height comes from the review data through the same
+ * pipeline the app runs, so this stays true if the dataset changes.
+ */
+const tower = buildLayout(
+  runPipeline(readFileSync(join(__dirname, '../../public/data/food-reviews.csv'), 'utf8')).days,
+)
+const buildings = buildCityBuildings(buildCityLayout(), 'high')
+const houses = buildHouses()
+const median = (v: number[]) => v.slice().sort((a, b) => a - b)[Math.floor(v.length / 2)]
+
+describe('the city against the tower', () => {
+  it('builds at a size that reads next to the hero', () => {
+    expect(median(buildings.map((b) => b.height))).toBeGreaterThan(60)
+    expect(median(buildings.map((b) => b.width))).toBeGreaterThan(85)
+    expect(median(houses.map((h) => h.height))).toBeGreaterThan(10)
+  })
+
+  it('leaves the tower the tallest thing by a clear margin', () => {
+    // Half. Anything above that and the skyline starts competing with the
+    // landmark the whole scene is built to show.
+    const tallest = Math.max(...buildings.map((b) => b.height))
+    expect(tallest).toBeLessThan(tower.totalHeight * 0.5)
+  })
+
+  it('leaves the tower the widest thing too', () => {
+    const widest = Math.max(...buildings.map((b) => Math.max(b.width, b.depth)))
+    expect(widest).toBeLessThan(buildingConfig.triangleSide)
+  })
+
+  it('keeps enough of them to read as a city', () => {
+    // Wider parcels mean fewer of them, and "the buildings are very few" has
+    // been reported before. This is the floor that trade may not cross.
+    expect(buildings.length).toBeGreaterThan(480)
+    expect(houses.length).toBeGreaterThan(1000)
+  })
+
+  it('still fits its houses on their frontages', () => {
+    // A house is placed every `pitch` along a street. Let the widest kind grow
+    // past that and neighbours start growing through each other.
+    expect(Math.max(...houses.map((h) => h.width))).toBeLessThanOrEqual(cityConfig.houses.pitch)
+  })
+})
