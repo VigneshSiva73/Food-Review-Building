@@ -1,3 +1,4 @@
+#Hi
 # Food Review Building
 
 An interactive architectural visualization of office food quality. A dataset of daily
@@ -122,3 +123,5 @@ states, and a clean production build.
 Still worth checking by hand, since this environment has no browser: sustained frame
 rate while orbiting (`?days=300&stats`), a Lighthouse accessibility run, real-device
 touch behaviour, and cross-browser rendering (Chrome/Edge/Firefox/Safari, iOS Safari).
+
+<!-- Sentra live check: apply suggestion committed this line (E9-T06) -->
