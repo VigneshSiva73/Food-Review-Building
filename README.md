@@ -1,3 +1,5 @@
+#HI-this is fro sentra project 
+
 # Food Review Building
 
 An interactive architectural visualization of office food quality. A dataset of daily
@@ -118,6 +120,17 @@ Automated here: dataset rules, pipeline cleaning, solver geometry and invariants
 selection metadata cross-checked against literal CSV rows, animation timeline bounds,
 responsive breakpoints, WCAG AA contrast (computed from the real stylesheet), error
 states, and a clean production build.
+
+import sqlite3
+
+def get_user(username):
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+    # Vulnerable: untrusted input is concatenated directly into the SQL string
+    query = f"SELECT id, username, role FROM users WHERE username = '{username}'"
+    cursor.execute(query)
+    return cursor.fetchall()
+
 
 Still worth checking by hand, since this environment has no browser: sustained frame
 rate while orbiting (`?days=300&stats`), a Lighthouse accessibility run, real-device
