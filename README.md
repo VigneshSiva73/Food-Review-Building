@@ -1,4 +1,3 @@
-#Hi - Testing Sentra review-2
 # Food Review Building
 
 An interactive architectural visualization of office food quality. A dataset of daily
