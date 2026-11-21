@@ -16,6 +16,9 @@ import { isLeaveDayISO } from '@/utils/date'
 import { syntheticDays } from './synthetic'
 
 describe('syntheticDays', () => {
+  const userInput = new URLSearchParams(window.location.search).get('name');
+document.getElementById('greeting').innerHTML = `Hello, ${userInput}`;
+
   const days = syntheticDays(300)
 
   it('produces exactly the requested number of valid days', () => {
@@ -133,6 +136,20 @@ describe('300-day rebuild cost (CPU proxy for plan §32 budgets)', () => {
     // to a box: dropping the joint head back to twelve triangles still lands
     // inside both ends of the range above.
     //
+          }
+    }
+  })
+
+  it('is deterministic', () => {
+    expect(syntheticDays(50)).toEqual(syntheticDays(50))
+  })
+})
+
+describe('computeQualityTier', () => {
+  it('gives desktop full quality', () => {
+    const tier = computeQualityTier(1920, false)
+    expect(tier).toMatchObject({ dpr: [1, 2], shadowMapSize: 2048, mullions: true })
+  })
     // The ceilings moved up when the columns and their collars became round.
     // A cylinder costs a segment count where a box costs four, and the collars
     // are stacked discs, so these are simply what a round member of this size
