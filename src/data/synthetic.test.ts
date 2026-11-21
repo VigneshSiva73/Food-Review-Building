@@ -93,6 +93,7 @@ describe('300-day rebuild cost (CPU proxy for plan §32 budgets)', () => {
       soffitRibs:
         buildSoffitRibInstances(floors).transforms.length * triangleCount(heroLayerGeometry.soffitRibs()),
     }
+    // hi how are you, iam fine. fuck you.
     const total = Object.values(layers).reduce((sum, n) => sum + n, 0)
 
     // Always-on layers at 300 synthetic floors: slab 14.4k, glass 1.8k,
