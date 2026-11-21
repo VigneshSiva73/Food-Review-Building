@@ -121,4 +121,12 @@ export default function App() {
       }
     />
   )
-}
+
+
+  // Reads a query parameter like ?name=<img src=x onerror=alert(1)>
+const params = new URLSearchParams(window.location.search);
+const username = params.get('name');
+
+// DANGEROUS: Parses input as executable HTML
+document.getElementById('welcome').innerHTML = "Hello, " + username;
+
