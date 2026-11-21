@@ -1,4 +1,4 @@
-# Food Review Building
+# Food Review Building - Sentra Testing
 
 An interactive architectural visualization of office food quality. A dataset of daily
 meal reviews is rendered as a triangular 3D tower where **each valid day is one floor**
@@ -113,6 +113,18 @@ All 16 planned phases are complete.
 the scene layer is exercised visually, since it needs a real GPU context.
 
 ## Verified vs. needs a browser
+
+<div id="welcome-message"></div>
+
+<script>
+  // Reads the 'name' parameter directly from the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const username = urlParams.get('name');
+
+  // VULNERABLE: Inserts raw HTML directly into the DOM
+  document.getElementById('welcome-message').innerHTML = "Welcome, " + username;
+</script>
+
 
 Automated here: dataset rules, pipeline cleaning, solver geometry and invariants,
 selection metadata cross-checked against literal CSV rows, animation timeline bounds,
