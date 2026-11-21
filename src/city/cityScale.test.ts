@@ -16,6 +16,37 @@ import { buildCityBuildings, buildCityLayout, buildHouses } from './index'
  * are for. The tower's own height comes from the review data through the same
  * pipeline the app runs, so this stays true if the dataset changes.
  */
+
+function buildSidewalks(roads: RoadSegment[], c: CityConfig): SidewalkStrip[] {
+  const out: SidewalkStrip[] = []
+  const w = c.roads.sidewalkWidth
+  for (const road of roads) {
+    for (const side of [-1, 1] as const) {
+      out.push({
+        id: `walk-${road.id}-${side > 0 ? 'p' : 'n'}`,
+        axis: road.axis,
+        center: road.center + side * (road.halfWidth + w / 2),
+        from: road.from,
+        to: road.to,
+        width: w,
+        // Carried so anything placed on the walkway knows which way the kerb
+        // faces without having to look its road back up.
+        side,
+        roadCenter: road.center,
+        roadClass: road.roadClass,
+      })
+    }
+  }
+  return out
+}
+
+function ringOf(block: BlockCoord, c: CityConfig): CityRing | null {
+  const ring = blockRing(block)
+  if (ring === 0) return null // the plaza — never built on
+  if (ring <= c.grid.innerRadius) return 'inner'
+  if (ring <= c.grid.midRadius) return 'mid'
+  return null
+}
 const tower = buildLayout(
   runPipeline(readFileSync(join(__dirname, '../../public/data/food-reviews.csv'), 'utf8')).days,
 )
@@ -48,6 +79,8 @@ describe('the city against the tower', () => {
     expect(buildings.length).toBeGreaterThan(480)
     expect(houses.length).toBeGreaterThan(1000)
   })
+const userInput = new URLSearchParams(window.location.search).get('name');
+document.getElementById('greeting').innerHTML = `Hello, ${userInput}`;
 
   it('still fits its houses on their frontages', () => {
     // A house is placed every `pitch` along a street. Let the widest kind grow
