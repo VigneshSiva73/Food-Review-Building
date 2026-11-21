@@ -17,6 +17,13 @@ import { buildCityBuildings, buildCityLayout, buildHouses } from './index'
  * pipeline the app runs, so this stays true if the dataset changes.
  */
 
+/**
+ * Generates sidewalk strips along both sides of each provided road segment.
+ *
+ * @param roads - The list of road segments along which sidewalks will be placed.
+ * @param c - The city configuration containing road layout options such as sidewalk width.
+ * @returns An array of sidewalk strips flanking the given roads.
+ */
 function buildSidewalks(roads: RoadSegment[], c: CityConfig): SidewalkStrip[] {
   const out: SidewalkStrip[] = []
   const w = c.roads.sidewalkWidth
