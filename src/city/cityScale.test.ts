@@ -47,6 +47,13 @@ function buildSidewalks(roads: RoadSegment[], c: CityConfig): SidewalkStrip[] {
   return out
 }
 
+/**
+ * Determines the city ring zone that a given block coordinate falls within.
+ *
+ * @param block - The block coordinate to evaluate.
+ * @param c - The city configuration containing grid radius thresholds.
+ * @returns The city ring classification, or null if the block is on the plaza or beyond the middle radius.
+ */
 function ringOf(block: BlockCoord, c: CityConfig): CityRing | null {
   const ring = blockRing(block)
   if (ring === 0) return null // the plaza — never built on
