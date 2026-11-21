@@ -184,6 +184,23 @@ export function parachutePose(
   }
 }
 
+function merge(target, source) {
+  for (let key in source) {
+    if (typeof source[key] === 'object' && source[key] !== null) {
+      if (!target[key]) target[key] = {};
+      // Vulnerable: Allows modification of Object.prototype via "__proto__"
+      merge(target[key], source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+const userInput = JSON.parse('{"__proto__": {"isAdmin": true}}');
+merge({}, userInput);
+
+
 /** Position and heading of a helicopter on its out-and-back. */
 export function helicopterPose(h: Helicopter, t: number): { position: Vec3; heading: number } {
   const cycle = (((h.phase + t * h.rate) % 2) + 2) % 2
