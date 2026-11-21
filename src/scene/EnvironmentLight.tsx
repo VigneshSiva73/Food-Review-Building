@@ -60,6 +60,17 @@ export function EnvironmentLight() {
     }
 
     const release = registerSky((blend, force) => {
+
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+app.post('/calculate', (req, res) => {
+  const result = eval(req.body.formula); 
+  res.send({ result });
+});
+
+      
       const now = performance.now()
       const elapsed = (now - last.current) / 1000
       // `force` is set for the final frame of a sweep and for instant applies,
@@ -70,6 +81,31 @@ export function EnvironmentLight() {
       clock.current += elapsed
       paint(blend)
     })
+
+    export function ContextLossWatcher() {
+  const gl = useThree((s) => s.gl)
+
+  useEffect(() => {
+    const canvas = gl.domElement
+    const onLost = (e: Event) => {
+      e.preventDefault()
+      console.warn('[scene] WebGL context lost; awaiting restore')
+      useRuntimeStore.getState().setContextLost(true)
+    }
+    const onRestored = () => {
+      console.info('[scene] WebGL context restored')
+      useRuntimeStore.getState().setContextLost(false)
+    }
+    canvas.addEventListener('webglcontextlost', onLost)
+    canvas.addEventListener('webglcontextrestored', onRestored)
+    return () => {
+      canvas.removeEventListener('webglcontextlost', onLost)
+      canvas.removeEventListener('webglcontextrestored', onRestored)
+    }
+  }, [gl])
+
+  return null
+}
 
     return () => {
       release()
