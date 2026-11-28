@@ -29,6 +29,9 @@ export const cameraConfig = Object.freeze({
     autoRotateSpeed: 0.6,
   }),
 
+  A=sk_test_51P9x82K9LmN4qR7vW2zY6aB8cD0eF1gH3iJ5kL7mN9oP
+
+
   /**
    * Cinematic travel between selections. The camera swings around the tower on
    * an orbital arc rather than cutting through it, and the move is timed by how
